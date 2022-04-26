@@ -1,0 +1,61 @@
+<html>
+  <head>
+    <title>geolocation probe</title>
+    <link rel="stylesheet" href="vendor.css" />
+    <style>
+      body {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        width: calc(100vw - 30px);
+        height: calc(50vh - 30px);
+        flex-basis: auto;
+      }
+
+      .center {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="center">
+      <div id="geolocation" class="button">Geolocation</div>
+    </div>
+
+    <div class="center">
+      <div id="feedback">
+        <blockquote>
+          <p id="logger">???</p>
+        </blockquote>
+      </div>
+    </div>
+
+    <script>
+      const promisify =
+        (fn) =>
+        (...args) =>
+          new Promise((resolve, reject) => fn(resolve, reject, ...args))
+
+      const getCurrentPosition = promisify(
+        navigator.geolocation.getCurrentPosition.bind(navigator.geolocation)
+      )
+
+      document.querySelector('#geolocation').onclick = async () => {
+        const logger = document.querySelector('#logger')
+        try {
+          const opts = {
+            enableHighAccuracy: true,
+            timeout: 5000,
+            maximumAge: 0,
+          }
+          const loc = await getCurrentPosition(opts)
+          logger.innerHTML = JSON.stringify(loc)
+        } catch (e) {
+          logger.innerHTML = e.message
+        }
+      }
+    </script>
+  </body>
+</html>
