@@ -23,3 +23,12 @@ document.querySelector('#geolocation').onclick = async () => {
     logger.innerHTML = e.message
   }
 }
+
+window.onload = function () {
+  const scale = window.outerWidth / 1280
+  document
+    .querySelector('head')
+    .append(
+      `<meta name="viewport" content="width=1280, initial-scale=${scale},maximum-scale=${scale}, user-scalable=0">`
+    )
+}
