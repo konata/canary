@@ -15,8 +15,10 @@ document.querySelector('#geolocation').onclick = async () => {
       timeout: 5000,
       maximumAge: 0,
     }
-    const loc = await getCurrentPosition(opts)
-    logger.innerHTML = JSON.stringify(loc)
+    const {
+      coords: { accuracy, latitude, longitude },
+    } = await getCurrentPosition(opts)
+    logger.innerHTML = JSON.stringify({ accuracy, latitude, longitude })
   } catch (e) {
     logger.innerHTML = e.message
   }
