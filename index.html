@@ -38,29 +38,37 @@
 
       <div class="navbar-menu" id="category">
         <div class="navbar-start">
-          <a class="navbar-item"> UA </a>
-          <a class="navbar-item"> JSBridge </a>
+          <a class="navbar-item" href="#user-agent"> UA </a>
+          <a class="navbar-item" href="#jsbridge"> JSBridge </a>
           <div class="navbar-item has-dropdown is-hoverable">
             <a class="navbar-link"> Clipboard </a>
             <div class="navbar-dropdown">
-              <a class="navbar-item"> read </a>
-              <a class="navbar-item"> readText </a>
-              <a class="navbar-item"> write </a>
-              <a class="navbar-item"> writeText</a>
+              <a class="navbar-item" href="#read"> read </a>
+              <a class="navbar-item" href="#read-text"> readText </a>
+              <a class="navbar-item" href="#write"> write </a>
+              <a class="navbar-item" href="#write-text"> writeText</a>
             </div>
           </div>
 
           <div class="navbar-item has-dropdown is-hoverable">
             <a class="navbar-link"> WebChromeClient </a>
             <div class="navbar-dropdown">
-              <a class="navbar-item"> onJsAlert </a>
-              <a class="navbar-item"> onJsConfirm </a>
-              <a class="navbar-item"> onJsPrompt </a>
-              <a class="navbar-item"> onGeolocationPermissionsShowPrompt</a>
-              <a class="navbar-item"> onPermissionRequest </a>
-              <a class="navbar-item"> onPermissionRequestCanceled </a>
-              <a class="navbar-item"> onConsoleMessage </a>
-              <a class="navbar-item"> onShowFileChooser </a>
+              <a class="navbar-item" href="#client-alert"> onJsAlert </a>
+              <a class="navbar-item" href="#client-confirm"> onJsConfirm </a>
+              <a class="navbar-item" href="#client-prompt"> onJsPrompt </a>
+              <a class="navbar-item" href="#geolocation">
+                onGeolocationPermissionsShowPrompt</a
+              >
+              <a class="navbar-item" href="#audio"> onPermissionRequest </a>
+              <a class="navbar-item" href="#audio-stop">
+                onPermissionRequestCanceled
+              </a>
+              <a class="navbar-item" href="#onconsolemessage">
+                onConsoleMessage
+              </a>
+              <a class="navbar-item" href="#onshowfilechooser">
+                onShowFileChooser
+              </a>
             </div>
           </div>
         </div>
@@ -220,6 +228,25 @@
             onConsoleMessage
           </button>
           <div class="control" id="onconsolemessage-return"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="box">
+      <div class="field">
+        <label class="label">onShowFileChooser</label>
+        <div class="file">
+          <label class="file-label">
+            <input
+              class="file-input"
+              type="file"
+              name="resume"
+              id="onshowfilechooser"
+            />
+            <span class="file-cta">
+              <span class="file-label"> Choose a file… </span>
+            </span>
+          </label>
         </div>
       </div>
     </div>
