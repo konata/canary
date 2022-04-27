@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- force validate -->
+    <title>Web Canary</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css"
+    />
+    <style>
+      .title {
+        font-size: 1.7em;
+        font-family: -apple-system, system-ui, system-ui, 'Segoe UI', Roboto,
+          'Helvetica Neue', 'Fira Sans', Ubuntu, Oxygen, 'Oxygen Sans',
+          Cantarell, 'Droid Sans', 'Apple Color Emoji', 'Segoe UI Emoji',
+          'Segoe UI Symbol', 'Lucida Grande', Helvetica, Arial, sans-serif;
+        color: rgba(0, 0, 0, 0.6);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- navigation-->
+    <nav class="navbar" role="navigation">
+      <div class="navbar-brand">
+        <a class="navbar-item">
+          <img src="images/canary.png" width="35" height="50" />
+        </a>
+        <a role="button" class="navbar-burger" data-target="category">
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </a>
+      </div>
+
+      <div class="navbar-menu" id="category">
+        <div class="navbar-start">
+          <a class="navbar-item"> UA </a>
+          <a class="navbar-item"> JSBridge </a>
+          <div class="navbar-item has-dropdown is-hoverable">
+            <a class="navbar-link"> Clipboard </a>
+            <div class="navbar-dropdown">
+              <a class="navbar-item"> read </a>
+              <a class="navbar-item"> readText </a>
+              <a class="navbar-item"> write </a>
+              <a class="navbar-item"> writeText</a>
+            </div>
+          </div>
+
+          <div class="navbar-item has-dropdown is-hoverable">
+            <a class="navbar-link"> WebChromeClient </a>
+            <div class="navbar-dropdown">
+              <a class="navbar-item"> onJsAlert </a>
+              <a class="navbar-item"> onJsConfirm </a>
+              <a class="navbar-item"> onJsPrompt </a>
+              <a class="navbar-item"> onGeolocationPermissionsShowPrompt</a>
+              <a class="navbar-item"> onPermissionRequest </a>
+              <a class="navbar-item"> onPermissionRequestCanceled </a>
+              <a class="navbar-item"> onConsoleMessage </a>
+              <a class="navbar-item"> onShowFileChooser </a>
+            </div>
+          </div>
+        </div>
+        <div class="navbar-end"></div>
+      </div>
+    </nav>
+
+    <!-- ua -->
+    <div class="box">
+      <div class="field">
+        <label class="label">User-Agent</label>
+        <div class="control" id="user-agent"></div>
+      </div>
+    </div>
+
+    <!-- jsbridge -->
+    <div class="box">
+      <div class="field">
+        <label class="label">JSBridge</label>
+        <div class="control" id="jsbridge"></div>
+      </div>
+    </div>
+
+    <!-- clipboard -->
+    <div class="box">
+      <div class="field">
+        <label class="label">Clipboard.read</label>
+        <div class="buttons">
+          <button class="button is-primary" id="read">read</button>
+          <div class="control" id="read-return"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="box">
+      <div class="field">
+        <label class="label">Clipboard.readText</label>
+        <div class="buttons">
+          <button class="button is-primary" id="read-text">readText</button>
+          <div class="control" id="read-text-return"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="box">
+      <div class="field">
+        <label class="label">Clipboard.write</label>
+        <div class="buttons">
+          <button class="button is-primary" id="write">write</button>
+          <div class="control" id="write-return"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="box">
+      <div class="field">
+        <label class="label">Clipboard.writeText</label>
+        <div class="buttons">
+          <button class="button is-primary" id="write-text">write</button>
+          <div class="control" id="write-text-return"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="box">
+      <div class="field">
+        <label class="label">Alert</label>
+        <div class="buttons">
+          <button class="button is-primary" id="client-alert">alert</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="box">
+      <div class="field">
+        <label class="label">Confirm</label>
+        <div class="buttons">
+          <button class="button is-primary" id="client-confirm">confirm</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="box">
+      <div class="field">
+        <label class="label">Prompt</label>
+        <div class="buttons">
+          <button class="button is-primary" id="client-prompt">prompt</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="box">
+      <div class="field">
+        <label class="label">onGeolocationPermissionsShowPrompt </label>
+        <div class="buttons">
+          <button class="button is-primary" id="geolocation">
+            geolocation
+          </button>
+          <div class="control" id="geolocation-return"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="box">
+      <div class="field">
+        <label class="label">onPermissionRequest(Audio)</label>
+        <div class="buttons">
+          <button class="button is-primary" id="audio">
+            onPermissionRequest(audio)
+          </button>
+          <div class="control" id="audio-return"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="box">
+      <div class="field">
+        <label class="label">onPermissionRequest(Video)</label>
+        <div class="buttons">
+          <button class="button is-primary" id="video">
+            onPermissionRequest(video)
+          </button>
+          <div class="control" id="video-return"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="box">
+      <div class="field">
+        <label class="label">onPermissionRequestCanceled(Audio)</label>
+        <div class="buttons">
+          <button class="button is-primary" id="audio-stop">
+            onPermissionRequestCanceled(audio)
+          </button>
+          <div class="control" id="audio-stop-return"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="box">
+      <div class="field">
+        <label class="label">onPermissionRequestCanceled(Video)</label>
+        <div class="buttons">
+          <button class="button is-primary" id="video-stop">
+            onPermissionRequestCanceled(video)
+          </button>
+          <div class="control" id="video-stop-return"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="box">
+      <div class="field">
+        <label class="label">onConsoleMessage</label>
+        <div class="buttons">
+          <button class="button is-primary" id="onconsolemessage">
+            onConsoleMessage
+          </button>
+          <div class="control" id="onconsolemessage-return"></div>
+        </div>
+      </div>
+    </div>
+
+    <script src="js/foundation.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', async () => {
+        $('#geolocation').onclick = async () => {
+          const $return = document.querySelector('#geolocation-return')
+          try {
+            const opts = {
+              enableHighAccuracy: true,
+              timeout: 5000,
+              maximumAge: 0,
+            }
+            const {
+              coords: { accuracy, latitude, longitude },
+            } = await new Promise((resolve, reject) => {
+              navigator.geolocation.getCurrentPosition(resolve, reject, opts)
+            })
+            $return.innerText = JSON.stringify({
+              accuracy,
+              latitude,
+              longitude,
+            })
+          } catch (e) {
+            $return.innerText = `Fail: ${e.message}`
+          }
+        }
+
+        const message = `alert / confirm / prompt`
+        ;`alert confirm prompt`.split(/\s+/).forEach(
+          (it) =>
+            ($(`#client-${it}`).onclick = () => {
+              window[it](message)
+            })
+        )
+
+        // navigation
+        const $el = $('.navbar-burger')[0]
+        $el.onclick = () => {
+          const {
+            dataset: { target },
+          } = $el
+          $(`#${target}`).classList.toggle('is-active')
+          $el.classList.toggle('is-active')
+        }
+
+        // user-agent
+        $('#user-agent').innerText = window.navigator.userAgent
+
+        // bridge pairs
+        $('#jsbridge').innerText = JSON.stringify(dump(window))
+
+        // read
+        $('#read').onclick = async () => {
+          const $console = $('#read-return')
+          try {
+            const permission = await navigator.permissions.query({
+              name: 'clipboard-read',
+            })
+            if (permission.state === 'denied') {
+              $console.innerText = 'Fail: ***permission denied***'
+              return
+            }
+            const contents = await navigator.clipboard.read()
+            const types = contents.flatMap((it) => it.types)
+            $console.innerText = `types: ${types.join(',')}`
+          } catch (e) {
+            $console.innerText = `Fail: ${e}`
+          }
+        }
+
+        // readText
+        $('#read-text').onclick = async () => {
+          const $console = $('#read-text-return')
+          try {
+            const permission = await navigator.permissions.query({
+              name: 'clipboard-read',
+            })
+            if (permission.state === 'denied') {
+              $console.innerText = 'Fail: ***permission denied***'
+              return
+            }
+            const text = await navigator.clipboard.readText()
+            $console.innerText = text
+          } catch (e) {
+            $console.innerText = `Fail: ${e.message}`
+          }
+        }
+
+        // write
+        $('#write').onclick = async () => {
+          const $console = $('#write-return')
+          try {
+            const permission = await navigator.permissions.query({
+              name: 'clipboard-read',
+            })
+            if (permission.state === 'denied') {
+              $console.innerText = 'Fail: ***permission denied***'
+              return
+            }
+
+            const type = 'text/plain'
+            const blob = new Blob(['Wow, set clipboard from webview'], { type })
+            const data = [new ClipboardItem({ [type]: blob })]
+
+            await navigator.clipboard.write(daa)
+            $console.innerText = 'Success'
+          } catch (e) {
+            $console.innerText = `failed: ${e.message}`
+          }
+        }
+
+        // writeText
+        $('#write-text').onclick = async () => {
+          const $console = $('#write-text-return')
+          try {
+            const permission = await navigator.permissions.query({
+              name: 'clipboard-read',
+            })
+            if (permission.state === 'denied') {
+              $console.innerText = '***permission denied***'
+              return
+            }
+
+            await navigator.clipboard.writeText(
+              `Wow, set plain text to clipboard`
+            )
+
+            $console.innerText = 'Success'
+          } catch (e) {
+            $console.innerText = `failed: ${e.message}`
+          }
+        }
+        ;`audio video`.split(/\s+/).forEach((it) => {
+          $(`#${it}`).onclick = async () => {
+            const $console = $(`#${it}-return`)
+            try {
+              const { id, active } = await navigator.mediaDevices.getUserMedia({
+                [it]: true,
+              })
+              $console.innerText = `Stream: ${JSON.stringify({ id, active })}`
+            } catch (e) {
+              $console.innerText = `Fail: ${e.message}`
+            }
+          }
+        })
+        ;`audio video`.split(/\s+/).forEach((it) => {
+          $(`#${it}-stop`).onclick = async () => {
+            const $console = $(`#${it}-stop-return`)
+            try {
+              const stream = await navigator.mediaDevices.getUserMedia({
+                [it]: true,
+              })
+              const { id, active } = stream
+              $console.innerText = `Stream: ${JSON.stringify({ id, active })}`
+              await delay(1000)
+              $console.innerText = `Close after 2s`
+              await delay(2000)
+              stream.getTracks().forEach((it) => it.stop())
+              $console.innerText = `Stopped`
+            } catch (e) {
+              $console.innerText = `Fail: ${e.message}`
+            }
+          }
+        })
+
+        $('#onconsolemessage').onclick = async () => {
+          const $console = $('#onconsolemessage-return')
+          ;`debug error log info error warn`.split(/\s+/g).forEach((it) => {
+            try {
+              console[it]('hello', 'world')
+            } catch (e) {
+              $console.innerText = `Fail: ${e.message}: ${it}`
+            }
+          })
+        }
+      })
+    </script>
+  </body>
+</html>
