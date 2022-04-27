@@ -326,8 +326,7 @@
             const type = 'text/plain'
             const blob = new Blob(['Wow, set clipboard from webview'], { type })
             const data = [new ClipboardItem({ [type]: blob })]
-
-            await navigator.clipboard.write(daa)
+            await navigator.clipboard.write(data)
             $console.innerText = 'Success'
           } catch (e) {
             $console.innerText = `failed: ${e.message}`
