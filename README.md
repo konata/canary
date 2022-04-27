@@ -1,6 +1,6 @@
 # WebView Canary
 
-## Webview Canary helps discover vulnerable / improper `WebChromeClient` implementation within Android WebView context
+> Webview Canary helps discover vulnerable / improper `WebChromeClient` implementation within Android WebView context
 
 1. User-Agent
    dump user-agent of current webview implementation
