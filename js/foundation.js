@@ -10,7 +10,7 @@ const dump = (win) => {
   // window.obj.fun
   // which will be recognized as `native function`
 
-  const bridges = Object.entries(window)
+  const bridges = Object.entries(win)
     .filter(
       ([, value]) =>
         value &&
