@@ -26,10 +26,14 @@ const dump = (win) => {
     )
     .map(([key, value]) => [
       key,
-      Object.fromEntries(
-        Object.keys(value).map((it) => [it, '[Native Function]'])
-      ), // transform keys to str representation
+      Object.keys(value).map((it) => [it, '[Native Function]']),
     ])
 
-  return Object.fromEntries(bridges)
+  return bridges
+    .map(([key, values]) => {
+      return `${key}: {
+${values.map(([k, _]) => `  ${k}: [Native Function]`).join('\n')}
+}`
+    })
+    .join('\n')
 }

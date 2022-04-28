@@ -39,7 +39,9 @@
       <div class="navbar-menu" id="category">
         <div class="navbar-start">
           <a class="navbar-item" href="#user-agent"> UA </a>
-          <a class="navbar-item" href="#javascriptinterface"> JavascriptInterface </a>
+          <a class="navbar-item" href="#javascriptinterface">
+            JavascriptInterface
+          </a>
           <div class="navbar-item has-dropdown is-hoverable">
             <a class="navbar-link"> Clipboard </a>
             <div class="navbar-dropdown">
@@ -88,7 +90,7 @@
     <div class="box">
       <div class="field">
         <label class="label">JavascriptInterface</label>
-        <div class="control" id="javascriptinterface"></div>
+        <pre class="control" id="javascriptinterface"></pre>
       </div>
     </div>
 
@@ -299,7 +301,7 @@
         $('#user-agent').innerText = window.navigator.userAgent
 
         // bridge pairs
-        $('#javascriptinterface').innerText = JSON.stringify(dump(window))
+        $('#javascriptinterface').innerText = dump(window)
 
         // read
         $('#read').onclick = async () => {
