@@ -351,7 +351,7 @@
             .value.replace(/^\s+|\s+$/g, '')
             .split(/:\/+/)
 
-          const intent = `intent://${entity}#Intent;${
+          const intent = `intent://${entity ?? ""}#Intent;${
             scheme ? `scheme=${scheme};` : ''
           }action=android.intent.action.SEND;launchFlags=0x3;${
             component ? `component=${component};` : ''
