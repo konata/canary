@@ -99,18 +99,25 @@
     <div class="box">
       <div class="field">
         <label class="label">Launch Intent (With Extra Stream)</label>
-        <input
-          id="component"
-          class="input is-info"
-          type="text"
-          placeholder="application.id/.target "
-        />
-        <input
-          id="data"
-          class="input is-info"
-          type="text"
-          placeholder="content://foo.bar/123"
-        />
+
+        <div class="control buttons">
+          <input
+            id="component"
+            class="input is-info is-rounded"
+            type="text"
+            placeholder="application.id/.target "
+          />
+        </div>
+
+        <div class="control buttons">
+          <input
+            id="data"
+            class="input is-info is-rounded"
+            type="text"
+            placeholder="content://foo.bar/123"
+          />
+        </div>
+
         <button class="button is-primary" id="launch">Launch</button>
         <div class="control" id="launch-return"></div>
       </div>
@@ -351,7 +358,7 @@
             .value.replace(/^\s+|\s+$/g, '')
             .split(/:\/+/)
 
-          const intent = `intent://${entity ?? ""}#Intent;${
+          const intent = `intent://${entity ?? ''}#Intent;${
             scheme ? `scheme=${scheme};` : ''
           }action=android.intent.action.SEND;launchFlags=0x3;${
             component ? `component=${component};` : ''
