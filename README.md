@@ -1,7 +1,8 @@
 # WebView Canary
 
 > Webview Canary helps discover vulnerable / improper `WebChromeClient` / `WebViewClient` / `WebSettings` implementation within Android WebView context
-> you may employ `https://lolicon.github.io/canary/` to get rid of the hassle https deployment
+
+tips: you may employ `https://lolicon.github.io/canary/` to get rid of the hassle https deployment
 
 1. User-Agent
    dump user-agent of current webview implementation
