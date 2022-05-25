@@ -1,6 +1,7 @@
 # WebView Canary
 
-> Webview Canary helps discover vulnerable / improper `WebChromeClient` implementation within Android WebView context
+> Webview Canary helps discover vulnerable / improper `WebChromeClient` / `WebViewClient` / `WebSettings` implementation within Android WebView context
+> you may employ `https://lolicon.github.io/canary/` to get rid of the hassle https deployment
 
 1. User-Agent
    dump user-agent of current webview implementation
@@ -8,10 +9,13 @@
 2. JavaScriptInterface
    dump _all_ ~~possible~~ JavascriptInterfaces implementation injected into current WebView context, which can be called by js immediately
 
-3. Clipboard
+3. LaunchIntent
+   generate a link with specified component name & data uri, automatically filled with grant flags / send actions / `HTML_TEXT` extra / selector to increase the possibility of exploiting
+
+4. Clipboard
    page invoke `read / readText / write / writeText` in js, the WebView implementation may involve in an active confirm process to avoid sensitive data leak to webpage
 
-4. WebChromeClient
+5. WebChromeClient
    - onJsAlert / onJsConfirm / onJsPrompt / onConsoleMessage
      page calls `alert/confirm/prompt`, `console.log/warn/debug/info/error`, the WebView client MUST NOT rely on the parameter for danger actions
    - onGeolocationPermissionsShowPrompt
