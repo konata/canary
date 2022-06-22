@@ -1,12 +1,12 @@
+import '@babel/polyfill'
+
 // page
-const $ = (sel) =>
-  sel.match(/^#/)
-    ? document.querySelector(sel)
-    : [...document.querySelectorAll(sel)]
-
-const delay = (ms) => new Promise((resolve, _) => setTimeout(resolve, ms))
-
-const dump = (win) => {
+type Selector = `#${string}` | `.${string}`
+const $ = <T extends HTMLElement = HTMLElement>(sel: Selector) =>
+  document.querySelector<T>(sel)
+const delay = (ms: number) =>
+  new Promise((resolve, _) => setTimeout(resolve, ms))
+const dump = (win: object) => {
   // js bridge must have a layout like
   // window.obj.fun
   // which will be recognized as `native function`
@@ -22,7 +22,7 @@ const dump = (win) => {
       ([, value]) =>
         Object.values(value).every(
           (fn) =>
-            typeof fn == 'function' && fn.toString().includes('native code')
+            typeof fn == 'function' && fn.toString().indexOf('native code') >= 0
         ) // filter every property must be native code
     )
     .map(([key, value]) => [
@@ -38,7 +38,7 @@ const dump = (win) => {
 // page logic
 document.addEventListener('DOMContentLoaded', async () => {
   $('#geolocation').onclick = async () => {
-    const $return = document.querySelector('#geolocation-return')
+    const $return = $('#geolocation-return')
     try {
       const opts = {
         enableHighAccuracy: true,
@@ -64,12 +64,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   ;`alert confirm prompt`.split(/\s+/).forEach(
     (it) =>
       ($(`#client-${it}`).onclick = () => {
-        window[it](message)
+        ;(window as any)[it]?.(message)
       })
   )
 
   // navigation
-  const $el = $('.navbar-burger')[0]
+  const $el = $('.navbar-burger')
   $el.onclick = () => {
     const {
       dataset: { target },
@@ -89,7 +89,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const $console = $('#read-return')
     try {
       const permission = await navigator.permissions.query({
-        name: 'clipboard-read',
+        name: 'clipboard-read' as any,
       })
       if (permission.state === 'denied') {
         $console.innerText = 'Fail: ***permission denied***'
@@ -105,8 +105,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   $('#launch').onclick = async () => {
     const $console = $('#launch-return')
-    const component = $('#component').value.replace(/^\s+|\s+$/g, '')
-    const [scheme, entity] = $('#data')
+    const component = $<HTMLInputElement>('#component').value.replace(
+      /^\s+|\s+$/g,
+      ''
+    )
+    const [scheme, entity] = $<HTMLInputElement>('#data')
       .value.replace(/^\s+|\s+$/g, '')
       .split(/:\/+/)
 
@@ -127,7 +130,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const $console = $('#read-text-return')
     try {
       const permission = await navigator.permissions.query({
-        name: 'clipboard-read',
+        name: 'clipboard-read' as any,
       })
       if (permission.state === 'denied') {
         $console.innerText = 'Fail: ***permission denied***'
@@ -145,7 +148,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const $console = $('#write-return')
     try {
       const permission = await navigator.permissions.query({
-        name: 'clipboard-read',
+        name: 'clipboard-read' as any,
       })
       if (permission.state === 'denied') {
         $console.innerText = 'Fail: ***permission denied***'
@@ -167,15 +170,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     const $console = $('#write-text-return')
     try {
       const permission = await navigator.permissions.query({
-        name: 'clipboard-read',
+        name: 'clipboard-read' as any,
       })
       if (permission.state === 'denied') {
         $console.innerText = '***permission denied***'
         return
       }
-
       await navigator.clipboard.writeText(`Wow, set plain text to clipboard`)
-
       $console.innerText = 'Success'
     } catch (e) {
       $console.innerText = `failed: ${e.message}`
@@ -218,7 +219,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const $console = $('#onconsolemessage-return')
     ;`debug error log info error warn`.split(/\s+/g).forEach((it) => {
       try {
-        console[it]('hello', 'world')
+        ;(console as any)[it]('hello', 'world')
       } catch (e) {
         $console.innerText = `Fail: ${e.message}: ${it}`
       }

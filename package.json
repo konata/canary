@@ -1,0 +1,41 @@
+{
+  "name": "canary",
+  "version": "1.0.0",
+  "description": "> Webview Canary helps discover vulnerable / improper `WebChromeClient` / `WebViewClient` / `WebSettings` implementation within Android WebView context",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lolicon/canary.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lolicon/canary/issues"
+  },
+  "homepage": "https://github.com/lolicon/canary#readme",
+  "devDependencies": {
+    "@babel/plugin-transform-runtime": "^7.18.5",
+    "@babel/preset-env": "^7.18.2",
+    "@babel/preset-typescript": "^7.17.12",
+    "babel-loader": "^8.2.5",
+    "webpack": "^5.73.0",
+    "webpack-cli": "^4.10.0"
+  },
+  "browserslist": [
+    "edge >= 16",
+    "safari >= 9",
+    "firefox >= 57",
+    "ie >= 11",
+    "ios >= 9",
+    "chrome >= 49"
+  ],
+  "dependencies": {
+    "@babel/polyfill": "^7.12.1",
+    "@babel/runtime": "^7.18.3",
+    "core-js": "^3.23.2"
+  }
+}
