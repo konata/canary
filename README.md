@@ -23,8 +23,11 @@ tips: you may employ `https://lolicon.github.io/canary/` to get rid of the hassl
 5. WebChromeClient
 
    - onJsAlert / onJsConfirm / onJsPrompt / onConsoleMessage
+
      page calls `alert/confirm/prompt`, `console.log/warn/debug/info/error`, the WebView client MUST NOT rely on the parameter for danger actions
    - onGeolocationPermissionsShowPrompt
+
      page requests for user location , WebView client should implement `onGeolocationPermissionsShowPrompt` with caution to avoid personal information disclosure to unwanted sites
    - onPermissionRequest
+
      page requests for audio/video streaming, WebView client should implement `onPermissionRequest` with caution to avoid data leakage
