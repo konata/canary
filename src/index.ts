@@ -35,30 +35,37 @@ const dump = (win: object) => {
   return JSON.stringify(Object.fromEntries(bridges), null, 2)
 }
 
-// page logic
-document.addEventListener('DOMContentLoaded', async () => {
-  $('#geolocation').onclick = async () => {
-    const $return = $('#geolocation-return')
+function catching(selector: Selector, fn: ($el: HTMLElement) => Promise<void>) {
+  $(selector).onclick = async () => {
+    const $el = $(`${selector}-return`)
     try {
-      const opts = {
-        enableHighAccuracy: true,
-        timeout: 5000,
-        maximumAge: 0,
-      }
-      const {
-        coords: { accuracy, latitude, longitude },
-      } = await new Promise((resolve, reject) => {
-        navigator.geolocation.getCurrentPosition(resolve, reject, opts)
-      })
-      $return.innerText = JSON.stringify({
-        accuracy,
-        latitude,
-        longitude,
-      })
+      await fn($el)
     } catch (e) {
-      $return.innerText = `Fail: ${e.message}`
+      $el.innerText = `Fail: ${e.message}`
     }
   }
+}
+
+// page logic
+document.addEventListener('DOMContentLoaded', async () => {
+  // geolocation
+  catching('#geolocation', async ($el) => {
+    const opts = {
+      enableHighAccuracy: true,
+      timeout: 5000,
+      maximumAge: 0,
+    }
+    const {
+      coords: { accuracy, latitude, longitude },
+    } = await new Promise((resolve, reject) => {
+      navigator.geolocation.getCurrentPosition(resolve, reject, opts)
+    })
+    $el.innerText = JSON.stringify({
+      accuracy,
+      latitude,
+      longitude,
+    })
+  })
 
   const message = `alert / confirm / prompt`
   ;`alert confirm prompt`.split(/\s+/).forEach(
@@ -84,27 +91,20 @@ document.addEventListener('DOMContentLoaded', async () => {
   // bridge pairs
   $('#javascriptinterface').innerText = dump(window)
 
-  // read
-  $('#read').onclick = async () => {
-    const $console = $('#read-return')
-    try {
-      const permission = await navigator.permissions.query({
-        name: 'clipboard-read' as any,
-      })
-      if (permission.state === 'denied') {
-        $console.innerText = 'Fail: ***permission denied***'
-        return
-      }
-      const contents = await navigator.clipboard.read()
-      const types = contents.flatMap((it) => it.types)
-      $console.innerText = `types: ${types.join(',')}`
-    } catch (e) {
-      $console.innerText = `Fail: ${e}`
+  catching('#read', async ($el) => {
+    const permission = await navigator.permissions.query({
+      name: 'clipboard-read' as any,
+    })
+    if (permission.state === 'denied') {
+      $el.innerText = 'Fail: ***permission denied***'
+      return
     }
-  }
+    const contents = await navigator.clipboard.read()
+    const types = contents.flatMap((it) => it.types)
+    $el.innerText = `types: ${types.join(',')}`
+  })
 
-  $('#launch').onclick = async () => {
-    const $console = $('#launch-return')
+  catching('#launch', async ($el) => {
     const component = $<HTMLInputElement>('#component').value.replace(
       /^\s+|\s+$/g,
       ''
@@ -120,109 +120,75 @@ document.addEventListener('DOMContentLoaded', async () => {
     }S.android.intent.extra.HTML_TEXT=foobar;${
       component ? `SEL;component=${component};` : ''
     }end`
-
-    $console.innerText = intent
+    $el.innerText = intent
     location.href = intent
-  }
-
-  // readText
-  $('#read-text').onclick = async () => {
-    const $console = $('#read-text-return')
-    try {
-      const permission = await navigator.permissions.query({
-        name: 'clipboard-read' as any,
-      })
-      if (permission.state === 'denied') {
-        $console.innerText = 'Fail: ***permission denied***'
-        return
-      }
-      const text = await navigator.clipboard.readText()
-      $console.innerText = text
-    } catch (e) {
-      $console.innerText = `Fail: ${e.message}`
-    }
-  }
-
-  // write
-  $('#write').onclick = async () => {
-    const $console = $('#write-return')
-    try {
-      const permission = await navigator.permissions.query({
-        name: 'clipboard-read' as any,
-      })
-      if (permission.state === 'denied') {
-        $console.innerText = 'Fail: ***permission denied***'
-        return
-      }
-
-      const type = 'text/plain'
-      const blob = new Blob(['Wow, set clipboard from webview'], { type })
-      const data = [new ClipboardItem({ [type]: blob })]
-      await navigator.clipboard.write(data)
-      $console.innerText = 'Success'
-    } catch (e) {
-      $console.innerText = `failed: ${e.message}`
-    }
-  }
-
-  // writeText
-  $('#write-text').onclick = async () => {
-    const $console = $('#write-text-return')
-    try {
-      const permission = await navigator.permissions.query({
-        name: 'clipboard-read' as any,
-      })
-      if (permission.state === 'denied') {
-        $console.innerText = '***permission denied***'
-        return
-      }
-      await navigator.clipboard.writeText(`Wow, set plain text to clipboard`)
-      $console.innerText = 'Success'
-    } catch (e) {
-      $console.innerText = `failed: ${e.message}`
-    }
-  }
-  ;`audio video`.split(/\s+/).forEach((it) => {
-    $(`#${it}`).onclick = async () => {
-      const $console = $(`#${it}-return`)
-      try {
-        const { id, active } = await navigator.mediaDevices.getUserMedia({
-          [it]: true,
-        })
-        $console.innerText = `Stream: ${JSON.stringify({ id, active })}`
-      } catch (e) {
-        $console.innerText = `Fail: ${e.message}`
-      }
-    }
-  })
-  ;`audio video`.split(/\s+/).forEach((it) => {
-    $(`#${it}-stop`).onclick = async () => {
-      const $console = $(`#${it}-stop-return`)
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({
-          [it]: true,
-        })
-        const { id, active } = stream
-        $console.innerText = `Stream: ${JSON.stringify({ id, active })}`
-        await delay(1000)
-        $console.innerText = `Close after 2s`
-        await delay(2000)
-        stream.getTracks().forEach((it) => it.stop())
-        $console.innerText = `Stopped`
-      } catch (e) {
-        $console.innerText = `Fail: ${e.message}`
-      }
-    }
   })
 
-  $('#onconsolemessage').onclick = async () => {
-    const $console = $('#onconsolemessage-return')
-    ;`debug error log info error warn`.split(/\s+/g).forEach((it) => {
-      try {
-        ;(console as any)[it]('hello', 'world')
-      } catch (e) {
-        $console.innerText = `Fail: ${e.message}: ${it}`
-      }
+  catching('#read-text', async ($el) => {
+    const permission = await navigator.permissions.query({
+      name: 'clipboard-read' as any,
     })
-  }
+    if (permission.state === 'denied') {
+      $el.innerText = 'Fail: ***permission denied***'
+      return
+    }
+    const text = await navigator.clipboard.readText()
+    $el.innerText = text
+  })
+
+  catching('#write', async ($el) => {
+    const permission = await navigator.permissions.query({
+      name: 'clipboard-read' as any,
+    })
+    if (permission.state === 'denied') {
+      $el.innerText = 'Fail: ***permission denied***'
+      return
+    }
+
+    const type = 'text/plain'
+    const blob = new Blob(['Wow, set clipboard from webview'], { type })
+    const data = [new ClipboardItem({ [type]: blob })]
+    await navigator.clipboard.write(data)
+    $el.innerText = 'Success'
+  })
+
+  catching('#write-text', async ($el) => {
+    const permission = await navigator.permissions.query({
+      name: 'clipboard-read' as any,
+    })
+    if (permission.state === 'denied') {
+      $el.innerText = '***permission denied***'
+      return
+    }
+    await navigator.clipboard.writeText(`Wow, set plain text to clipboard`)
+    $el.innerText = 'Success'
+  })
+  ;`audio video`.split(/\s+/).forEach((it) => {
+    catching(`#${it}`, async ($el) => {
+      const { id, active } = await navigator.mediaDevices.getUserMedia({
+        [it]: true,
+      })
+      $el.innerText = `Stream: ${JSON.stringify({ id, active })}`
+    })
+  })
+  ;`audio video`.split(/\s+/).forEach((it) => {
+    catching(`#${it}-stop`, async ($el) => {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        [it]: true,
+      })
+      const { id, active } = stream
+      $el.innerText = `Stream: ${JSON.stringify({ id, active })}`
+      await delay(1000)
+      $el.innerText = `Close after 2s`
+      await delay(2000)
+      stream.getTracks().forEach((it) => it.stop())
+      $el.innerText = `Stopped`
+    })
+  })
+
+  catching('#onconsolemessage', async ($el) => {
+    ;`debug error log info error warn`.split(/\s+/g).forEach((it) => {
+      ;(console as any)[it]('hello', 'world')
+    })
+  })
 })
